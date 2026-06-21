@@ -1,0 +1,67 @@
+/* CSS custom-property mirror of the design tokens.
+   Source of truth: TGS_Design_System_v1.md §3.
+   Layouts read var(--cw-*) so a single [data-cw] attribute switches the whole post. */
+
+:root {
+  /* Base palette (§3.1) */
+  --tatva-blue: #1e3a8a;
+  --tatva-green: #0b7a53;
+  --whisper-white: #f7f7f7;
+  --slate-black: #1f2937;
+  --learning-amber: #ffc352;
+  --hashtag-corral: #e9695f;
+  --leaf-mint: #e9f7ef;
+  --cool-blue: #f5f7fa;
+  --secondary-blue: #0e7490;
+  --learning-white: #f7efe3;
+
+  /* Fonts (§4.1 — non-negotiable) */
+  --font-display: 'Kalam', cursive;
+  --font-body: 'Poppins', sans-serif;
+
+  /* Grid (§2 — non-negotiable) */
+  --margin: 50px;
+  --gutter: 20px;
+}
+
+/* Colorway A — Tatva Blue */
+[data-cw='A'] {
+  --cw-primary: #1e3a8a;
+  --cw-text-on-primary: #ffffff;
+  --cw-accent: #ffc352;
+  --cw-overlay: rgba(14, 28, 80, 0.82);
+  --cw-bottom-bg: #f7f7f7;
+  --cw-bottom-text: #1f2937;
+  --cw-border: #1e3a8a;
+  --cw-pill-bg: #e9695f;
+  --cw-pill-text: #ffffff;
+  --cw-accent-shape: #ffc352;
+}
+
+/* Colorway B — Tatva Green */
+[data-cw='B'] {
+  --cw-primary: #0b7a53;
+  --cw-text-on-primary: #ffffff;
+  --cw-accent: #ffc352;
+  --cw-overlay: rgba(5, 60, 40, 0.82);
+  --cw-bottom-bg: #f7f7f7;
+  --cw-bottom-text: #1f2937;
+  --cw-border: #0b7a53;
+  --cw-pill-bg: #e9695f;
+  --cw-pill-text: #ffffff;
+  --cw-accent-shape: #ffc352;
+}
+
+/* Colorway C — Learning Amber */
+[data-cw='C'] {
+  --cw-primary: #ffc352;
+  --cw-text-on-primary: #1f2937;
+  --cw-accent: #1e3a8a;
+  --cw-overlay: rgba(160, 100, 5, 0.8);
+  --cw-bottom-bg: #fff8eb;
+  --cw-bottom-text: #1f2937;
+  --cw-border: #ffc352;
+  --cw-pill-bg: #1e3a8a;
+  --cw-pill-text: #ffffff;
+  --cw-accent-shape: #1e3a8a;
+}
