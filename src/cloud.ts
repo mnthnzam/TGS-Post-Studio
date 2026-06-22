@@ -24,28 +24,31 @@ function fromTokens(access_token: string, refresh_token: string): Session {
 export const isAuthed = () => !!session;
 export const getEmail = () => session?.email ?? null;
 
-// Parse magic-link return (#access_token=…). Returns true if a session was set.
-export function consumeAuthRedirect(): boolean {
-  const h = window.location.hash;
-  if (!h || !h.includes('access_token=')) return false;
-  const p = new URLSearchParams(h.slice(1));
-  const at = p.get('access_token'); const rt = p.get('refresh_token');
-  history.replaceState(null, '', window.location.pathname + window.location.search);
-  if (at && rt) { setSession(fromTokens(at, rt)); return true; }
-  return false;
+function applyAuthResponse(data: { access_token?: string; refresh_token?: string }): boolean {
+  if (data?.access_token && data?.refresh_token) { setSession(fromTokens(data.access_token, data.refresh_token)); return true; }
+  return false; // e.g. email confirmation required
+}
+function authError(data: { error_description?: string; msg?: string; message?: string }, fallback: string): string {
+  return data?.error_description || data?.msg || data?.message || fallback;
 }
 
-export async function requestMagicLink(email: string): Promise<void> {
-  const redirect = encodeURIComponent(window.location.origin + window.location.pathname);
-  const res = await fetch(`${SUPABASE_URL}/auth/v1/otp?redirect_to=${redirect}`, {
-    method: 'POST',
-    headers: { apikey: SUPABASE_ANON_KEY, 'Content-Type': 'application/json' },
-    // create_user true: an allow-listed email can sign in on first use. Access to
-    // the library is gated in Postgres (team_members allow-list + RLS), so a
-    // non-listed sign-in is authenticated but can read/write nothing.
-    body: JSON.stringify({ email, create_user: true }),
+export async function signIn(email: string, password: string): Promise<void> {
+  const res = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`, {
+    method: 'POST', headers: { apikey: SUPABASE_ANON_KEY, 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password }),
   });
-  if (!res.ok) throw new Error((await res.text()) || 'Could not send the link');
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(authError(data, 'Sign-in failed'));
+  if (!applyAuthResponse(data)) throw new Error('Sign-in did not return a session');
+}
+
+// Returns true if signed in immediately, false if email confirmation is required.
+export async function signUp(email: string, password: string): Promise<boolean> {
+  const res = await fetch(`${SUPABASE_URL}/auth/v1/signup`, {
+    method: 'POST', headers: { apikey: SUPABASE_ANON_KEY, 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password }),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(authError(data, 'Sign-up failed'));
+  return applyAuthResponse(data);
 }
 
 export async function signOut(): Promise<void> {

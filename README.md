@@ -33,23 +33,21 @@ Saved posts sync to a shared Supabase library; `localStorage` is a local cache s
 
 Connection lives in `src/cloud-config.ts` (the anon key is public by design — row-level security + auth protect the data).
 
-Access is gated by an allow-list in the database (`team_members` table + row-level security): only listed emails can read or write the library. Anyone else who signs in is authenticated but can access nothing.
+Sign-in is **email + password**. Access is gated by an allow-list in the database (`team_members` table + row-level security): only listed emails can read or write the library. Anyone else who signs in is authenticated but can access nothing.
 
 **Required setup in the Supabase dashboard** (project `tgs-post-studio`):
 
-1. **Authentication → URL Configuration** (the only required dashboard step)
-   - Site URL: your production URL (the Vercel domain).
-   - Redirect URLs: add `http://localhost:5173/` (dev) and your Vercel domain. Magic-link redirects must be allow-listed or login fails.
+- **Authentication → Providers → Email → turn OFF "Confirm email"** (so account creation logs the user in immediately, with no email step). The allow-list is the real gate, so this is safe.
 
-**To add a team member:** add their email to the allow-list — either ask me (I can run it), or in **SQL Editor**:
+**To add a team member:**
 
-```sql
-insert into team_members (email) values ('person@zamstars.com') on conflict do nothing;
-```
+1. Add their email to the allow-list — ask me, or run in **SQL Editor**:
+   ```sql
+   insert into team_members (email) values ('person@zamstars.com') on conflict do nothing;
+   ```
+2. They open the app, click **Create account**, enter that email + a password → they're in.
 
-They then enter that email on the sign-in screen → magic link → access. (No need to pre-create users or toggle signup settings — the allow-list is the gate.)
-
-Notes: free-tier email is rate-limited (a few/hour) and links can land in spam — fine for a small team; add custom SMTP later if needed. "Use offline on this device" on the login screen gives a local-only fallback (no shared library).
+"Use offline on this device" on the login screen gives a local-only fallback (no shared library).
 
 ## Self-contained build (optional)
 

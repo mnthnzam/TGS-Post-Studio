@@ -1,21 +1,30 @@
 import { useState } from 'react';
-import { requestMagicLink } from '../cloud';
+import { signIn, signUp } from '../cloud';
 import { ui } from '../ui/styles';
 import { ASSETS } from '../assets';
 
-export default function Login({ onOffline }: { onOffline: () => void }) {
+export default function Login({ onAuthed, onOffline }: { onAuthed: () => void; onOffline: () => void }) {
+  const [mode, setMode] = useState<'in' | 'up'>('in');
   const [email, setEmail] = useState('');
-  const [sent, setSent] = useState(false);
+  const [password, setPassword] = useState('');
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState('');
+  const [note, setNote] = useState('');
 
   const submit = async () => {
     const e = email.trim();
-    if (!e) return;
-    setBusy(true); setErr('');
-    try { await requestMagicLink(e); setSent(true); }
-    catch { setErr('Could not send the link. Make sure this email has been invited to the team.'); }
-    finally { setBusy(false); }
+    if (!e || !password) return;
+    setBusy(true); setErr(''); setNote('');
+    try {
+      if (mode === 'in') { await signIn(e, password); onAuthed(); }
+      else {
+        const signedIn = await signUp(e, password);
+        if (signedIn) onAuthed();
+        else setNote('Account created. If email confirmation is on, confirm via the email, then sign in.');
+      }
+    } catch (ex) {
+      setErr((ex as Error).message || 'Something went wrong');
+    } finally { setBusy(false); }
   };
 
   return (
@@ -26,27 +35,28 @@ export default function Login({ onOffline }: { onOffline: () => void }) {
           <strong style={{ fontSize: 12.5, letterSpacing: '0.12em', fontFamily: 'var(--font-mono)' }}>TGS · STUDIO</strong>
         </div>
 
-        {sent ? (
-          <div>
-            <div style={{ fontSize: 15, fontWeight: 500, marginBottom: 8 }}>Check your email</div>
-            <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.6 }}>
-              We sent a sign-in link to <strong>{email}</strong>. Open it on this device to access the shared library.
-            </div>
-            <button style={{ ...ui.btn, marginTop: 18 }} onClick={() => setSent(false)}>Use a different email</button>
-          </div>
-        ) : (
-          <div>
-            <div style={{ fontSize: 15, fontWeight: 500, marginBottom: 4 }}>Sign in</div>
-            <div style={{ fontSize: 13, color: 'var(--text-secondary)', marginBottom: 16 }}>Team members get a magic link by email — no password.</div>
-            <input
-              style={ui.field} type="email" placeholder="you@zamstars.com" value={email}
-              onChange={(e) => setEmail(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && submit()}
-            />
-            {err && <div style={{ fontSize: 12, color: 'var(--danger)', marginTop: 8 }}>{err}</div>}
-            <button style={{ ...ui.btnPrimary, width: '100%', marginTop: 14 }} onClick={submit} disabled={busy}>{busy ? 'Sending…' : 'Send magic link'}</button>
-            <button style={{ ...ui.btn, width: '100%', marginTop: 8, border: 'none', color: 'var(--text-tertiary)' }} onClick={onOffline}>Use offline on this device</button>
-          </div>
-        )}
+        <div style={{ fontSize: 15, fontWeight: 500, marginBottom: 4 }}>{mode === 'in' ? 'Sign in' : 'Create account'}</div>
+        <div style={{ fontSize: 13, color: 'var(--text-secondary)', marginBottom: 16 }}>Team members only. Use your Zamstars email.</div>
+
+        <input style={{ ...ui.field, marginBottom: 8 }} type="email" placeholder="you@zamstars.com" value={email}
+          onChange={(e) => setEmail(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && submit()} />
+        <input style={ui.field} type="password" placeholder="Password" value={password}
+          onChange={(e) => setPassword(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && submit()} />
+
+        {err && <div style={{ fontSize: 12, color: 'var(--danger)', marginTop: 8 }}>{err}</div>}
+        {note && <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginTop: 8 }}>{note}</div>}
+
+        <button style={{ ...ui.btnPrimary, width: '100%', marginTop: 14 }} onClick={submit} disabled={busy}>
+          {busy ? 'Please wait…' : mode === 'in' ? 'Sign in' : 'Create account'}
+        </button>
+
+        <button style={{ ...ui.btn, width: '100%', marginTop: 8, border: 'none', color: 'var(--text-secondary)' }}
+          onClick={() => { setMode(mode === 'in' ? 'up' : 'in'); setErr(''); setNote(''); }}>
+          {mode === 'in' ? 'First time? Create an account' : 'Have an account? Sign in'}
+        </button>
+        <button style={{ ...ui.btn, width: '100%', marginTop: 4, border: 'none', color: 'var(--text-tertiary)' }} onClick={onOffline}>
+          Use offline on this device
+        </button>
       </div>
     </div>
   );
