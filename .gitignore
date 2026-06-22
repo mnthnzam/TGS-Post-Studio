@@ -26,3 +26,4 @@ TGS_Post_Studio.html
 *.njsproj
 *.sln
 *.sw?
+.env*

@@ -1,7 +1,7 @@
 import { useMemo, useRef, useState } from 'react';
 import type { ChangeEvent, CSSProperties } from 'react';
 import { getModule } from '../layouts/registry';
-import { store } from '../store';
+import { store, useStoreList } from '../store';
 import {
   exportDocImage, exportColorwayVariants, exportCaptionsCsv,
   exportProjectJson, readProjectJson, exportStyleGuide,
@@ -18,8 +18,7 @@ function Thumb({ doc }: { doc: PostDoc }) {
 }
 
 export default function Exports() {
-  const [tick, setTick] = useState(0);
-  const posts = useMemo(() => store.list(), [tick]);
+  const posts = useStoreList();
   const [sel, setSel] = useState<Set<string>>(new Set());
   const [busy, setBusy] = useState('');
   const fileRef = useRef<HTMLInputElement>(null);
@@ -34,7 +33,6 @@ export default function Exports() {
     await run('Importing', async () => {
       const docs = await readProjectJson(file);
       docs.forEach((d) => store.save(d));
-      setTick((t) => t + 1);
       alert(`Imported ${docs.length} post(s).`);
     });
   };

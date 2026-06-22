@@ -1,7 +1,7 @@
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import type { CSSProperties } from 'react';
 import { LAYOUTS, getModule } from '../layouts/registry';
-import { store } from '../store';
+import { store, useStoreList } from '../store';
 import { uid } from '../model';
 import { BUCKETS } from '../logic/mappings';
 import { ui } from '../ui/styles';
@@ -22,9 +22,7 @@ function mini(): CSSProperties {
 }
 
 export default function Dashboard({ onNew, onNewFromBucket, onEdit }: { onNew: (id: LayoutId) => void; onNewFromBucket: (b: Bucket) => void; onEdit: (doc: PostDoc) => void }) {
-  const [tick, setTick] = useState(0);
-  const posts = useMemo(() => store.list(), [tick]);
-  const refresh = () => setTick((t) => t + 1);
+  const posts = useStoreList();
 
   return (
     <div style={{ flex: 1, overflowY: 'auto', padding: 30, maxWidth: 1180 }}>
@@ -65,8 +63,8 @@ export default function Dashboard({ onNew, onNewFromBucket, onEdit }: { onNew: (
                 <div style={small}>{doc.layoutId} · {new Date(doc.updatedAt).toLocaleDateString()}</div>
                 <div style={{ display: 'flex', gap: 6 }}>
                   <button onClick={() => onEdit(doc)} style={mini()}>Edit</button>
-                  <button onClick={() => { store.duplicate(doc.id, uid); refresh(); }} style={mini()}>Duplicate</button>
-                  <button onClick={() => { if (confirm('Delete this post?')) { store.remove(doc.id); refresh(); } }} style={{ ...mini(), color: 'var(--danger)' }}>Delete</button>
+                  <button onClick={() => store.duplicate(doc.id, uid)} style={mini()}>Duplicate</button>
+                  <button onClick={() => { if (confirm('Delete this post?')) store.remove(doc.id); }} style={{ ...mini(), color: 'var(--danger)' }}>Delete</button>
                 </div>
               </div>
             </div>

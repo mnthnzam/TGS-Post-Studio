@@ -27,9 +27,29 @@ This repo is a standard Vite app — Vercel auto-detects it.
 3. Framework preset: **Vite** (auto). Build command `npm run build`, output `dist`. Deploy.
 4. Every push to `main` redeploys automatically — that's the team update path.
 
-## Data & sharing
+## Team sync (Supabase)
 
-Posts and brand settings are stored per-browser in `localStorage`. Hosting makes **app updates** seamless for the team; it does **not** sync the post library between people. To move a library between machines, use **Exports → Project backup** (download/import `.json`). A shared cloud library would require adding a backend (e.g. Supabase) — a future step.
+Saved posts sync to a shared Supabase library; `localStorage` is a local cache so the app still works offline. Team members sign in with an email magic link (no password). Brand settings stay per-browser.
+
+Connection lives in `src/cloud-config.ts` (the anon key is public by design — row-level security + auth protect the data).
+
+Access is gated by an allow-list in the database (`team_members` table + row-level security): only listed emails can read or write the library. Anyone else who signs in is authenticated but can access nothing.
+
+**Required setup in the Supabase dashboard** (project `tgs-post-studio`):
+
+1. **Authentication → URL Configuration** (the only required dashboard step)
+   - Site URL: your production URL (the Vercel domain).
+   - Redirect URLs: add `http://localhost:5173/` (dev) and your Vercel domain. Magic-link redirects must be allow-listed or login fails.
+
+**To add a team member:** add their email to the allow-list — either ask me (I can run it), or in **SQL Editor**:
+
+```sql
+insert into team_members (email) values ('person@zamstars.com') on conflict do nothing;
+```
+
+They then enter that email on the sign-in screen → magic link → access. (No need to pre-create users or toggle signup settings — the allow-list is the gate.)
+
+Notes: free-tier email is rate-limited (a few/hour) and links can land in spam — fine for a small team; add custom SMTP later if needed. "Use offline on this device" on the login screen gives a local-only fallback (no shared library).
 
 ## Self-contained build (optional)
 

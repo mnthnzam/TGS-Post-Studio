@@ -5,6 +5,8 @@ import lab from './assets/lab.jpg';
 import boy from './assets/l3-boy.png';
 import logoColor from './assets/logo-color.svg';
 import logoWhite from './assets/logo-white.svg';
+import iconColor from './assets/icon-color.svg';
+import iconWhite from './assets/icon-white.svg';
 import KalamBold from './assets/Kalam-Bold.ttf';
 import KalamRegular from './assets/Kalam-Regular.ttf';
 import PoppinsRegular from './assets/Poppins-Regular.ttf';
@@ -17,6 +19,8 @@ export const ASSETS = {
   boy: { href: boy, w: 1010, h: 749 },
   logoColor,
   logoWhite,
+  iconColor,
+  iconWhite,
   fonts: [
     { family: 'Kalam', weight: 700, src: KalamBold },
     { family: 'Kalam', weight: 400, src: KalamRegular },
