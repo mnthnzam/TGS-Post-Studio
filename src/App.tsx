@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Analytics } from '@vercel/analytics/react';
 import Shell from './app/Shell';
 import Login from './app/Login';
 import { cloudEnabled } from './cloud-config';
@@ -11,8 +12,14 @@ export default function App() {
 
   useEffect(() => { if (authed) syncFromCloud(); }, [authed]);
 
-  if (cloudEnabled && !authed && !offline) {
-    return <Login onAuthed={() => setAuthed(true)} onOffline={() => setOffline(true)} />;
-  }
-  return <Shell signedIn={authed} />;
+  const content = cloudEnabled && !authed && !offline
+    ? <Login onAuthed={() => setAuthed(true)} onOffline={() => setOffline(true)} />
+    : <Shell signedIn={authed} />;
+
+  return (
+    <>
+      {content}
+      <Analytics />
+    </>
+  );
 }
