@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import Shell from './app/Shell';
 import Login from './app/Login';
 import { cloudEnabled } from './cloud-config';
@@ -20,6 +21,7 @@ export default function App() {
     <>
       {content}
       <Analytics />
+      <SpeedInsights />
     </>
   );
 }
