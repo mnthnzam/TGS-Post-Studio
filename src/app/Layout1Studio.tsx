@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import type { ChangeEvent, CSSProperties, PointerEvent as RPointerEvent, WheelEvent as RWheelEvent } from 'react';
 import { buildLayout1Svg, PHOTO_REGION } from '../svg/layout1';
 import type { ColorwayId, Layout1Params } from '../svg/layout1';
+import { PRESETS } from '../presets/index';
 import { exportLayout1Png } from './exportLayout1';
 import { ASSETS, injectFontFaces } from '../assets';
 
@@ -85,6 +86,7 @@ export default function Layout1Studio() {
   const params: Layout1Params = useMemo(() => ({
     headlineLines, bodyLines,
     hashtag, colorway,
+    preset: PRESETS['feed-portrait'],
     photoHref: photo.href, photoW: photo.w, photoH: photo.h,
     scale, focalX, focalY, headlineSize, bodySize,
     logoHref: ASSETS.logoColor, pillTextWidth,

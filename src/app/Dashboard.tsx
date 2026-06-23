@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import type { CSSProperties } from 'react';
 import { LAYOUTS, getModule } from '../layouts/registry';
+import { presetOf } from '../presets/index';
 import { store, useStoreList } from '../store';
 import { uid } from '../model';
 import { BUCKETS } from '../logic/mappings';
@@ -13,8 +14,9 @@ const small: CSSProperties = { fontSize: 11.5, color: 'var(--text-tertiary)' };
 const sectionH: CSSProperties = { color: 'var(--text-primary)', fontSize: 14, fontWeight: 500, margin: '0 0 10px' };
 
 function Thumb({ doc }: { doc: PostDoc }) {
-  const svg = useMemo(() => { try { return getModule(doc.layoutId).build(doc); } catch { return ''; } }, [doc]);
-  return <div style={thumb} dangerouslySetInnerHTML={{ __html: svg.replace('<svg ', '<svg style="width:100%;height:100%;display:block" ') }} />;
+  const preset = presetOf(doc.preset);
+  const svg = useMemo(() => { try { return getModule(doc.layoutId).build(doc, preset); } catch { return ''; } }, [doc, preset]);
+  return <div style={{ ...thumb, aspectRatio: `${preset.w} / ${preset.h}` }} dangerouslySetInnerHTML={{ __html: svg.replace('<svg ', '<svg style="width:100%;height:100%;display:block" ') }} />;
 }
 
 function mini(): CSSProperties {

@@ -6,8 +6,14 @@ import { isAuthed, cloudList, cloudUpsert, cloudDelete } from './cloud';
 
 const KEY = 'tgs.posts.v1';
 
+// Migrate old PostDocs that predate the format-preset system.
+function migrate(doc: PostDoc): PostDoc {
+  if (!doc.preset) doc.preset = 'feed-portrait';
+  if (!doc.photoFocalPoints) doc.photoFocalPoints = {};
+  return doc;
+}
 function readAll(): PostDoc[] {
-  try { const raw = localStorage.getItem(KEY); return raw ? (JSON.parse(raw) as PostDoc[]) : []; } catch { return []; }
+  try { const raw = localStorage.getItem(KEY); return raw ? (JSON.parse(raw) as PostDoc[]).map(migrate) : []; } catch { return []; }
 }
 function writeAll(docs: PostDoc[]): void { localStorage.setItem(KEY, JSON.stringify(docs)); rebuild(); }
 

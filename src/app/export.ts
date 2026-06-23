@@ -1,4 +1,5 @@
 import { getModule, LAYOUTS } from '../layouts/registry';
+import { presetOf } from '../presets/index';
 import { ASSETS } from '../assets';
 import { getLogoColor, getLogoWhite } from '../settings';
 import { buildGuidePages } from '../svg/styleguide';
@@ -76,9 +77,10 @@ export async function exportDocImage(doc: PostDoc, fmt: 'png' | 'jpg' = 'png'): 
   const { photoHref } = await resolveDoc(doc);
   const useColor = doc.layoutId === 'L1' || (doc.layoutId === 'L3' && doc.colorway === 'C');
   const logoHref = await urlToDataUrl(useColor ? getLogoColor() : getLogoWhite());
-  const svg = mod.build(doc, { photoHref, logoHref, fontFaceCss: css });
+  const preset = presetOf(doc.preset);
+  const svg = mod.build(doc, preset, { photoHref, logoHref, fontFaceCss: css });
   const mime = fmt === 'png' ? 'image/png' : 'image/jpeg';
-  download(await rasterize(svg, 1080, 1350, mime), `tgs-${slug(doc.name || doc.hashtag)}-${doc.colorway}.${fmt}`);
+  download(await rasterize(svg, preset.w, preset.h, mime), `tgs-${slug(doc.name || doc.hashtag)}-${doc.colorway}.${fmt}`);
 }
 
 export const exportDocPng = (doc: PostDoc) => exportDocImage(doc, 'png');
@@ -122,7 +124,7 @@ async function buildGuide(): Promise<{ svg: string; title: string }[]> {
     const d = m.newDoc();
     const photoHref = d.photo ? await urlToDataUrl(d.photo.src) : undefined;
     const logoHref = m.id === 'L1' ? logoColor : logoWhite;
-    examples.push({ label: m.label, useCase: USE_CASES[m.id], svg: m.build(d, { photoHref, logoHref }) });
+    examples.push({ label: m.label, useCase: USE_CASES[m.id], svg: m.build(d, presetOf(d.preset), { photoHref, logoHref }) });
   }
   return buildGuidePages(examples, { version: 'v1.1', logoColor, logoWhite, fontFaceCss: css });
 }

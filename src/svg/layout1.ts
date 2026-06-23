@@ -1,6 +1,14 @@
 // Shared SVG builder for Layout 1 (Teacher-Centric Story Frame).
 // Geometry traced from Figma node 2562:180 family. Used BY BOTH the live preview
 // and the PNG export, so what you see is exactly what exports.
+//
+// All geometry is authored in 1080×1350 base space and scaled to the active
+// preset: X/W by S = w/1080, Y/H by SY = h/1350. For feed-portrait (S=SY=1)
+// the output is byte-identical to the original single-format builder.
+
+import type { FormatPreset } from '../presets/index';
+import { gWrap } from '../anim/svgGroup';
+import type { AnimMap } from '../anim/types';
 
 export type ColorwayId = 'A' | 'B' | 'C';
 
@@ -9,6 +17,7 @@ export interface Layout1Params {
   bodyLines: string[]; // white/dark Poppins, stacked
   hashtag: string;
   colorway: ColorwayId;
+  preset: FormatPreset; // target canvas
   // photo + framing
   photoHref: string; // URL or data URI
   photoW: number; // natural width
@@ -27,6 +36,8 @@ export interface Layout1Params {
   pillTextWidth?: number; // measured hashtag text width; pill auto-sizes to it
   /** When provided, injected as <style> so SVG-as-image rasterization has fonts. */
   fontFaceCss?: string;
+  /** Per-element animation state for video frames. Omit for a static render. */
+  anim?: AnimMap;
 }
 
 interface ColorwayStyle {
@@ -43,100 +54,131 @@ const topRounded = (x: number, y: number, w: number, h: number, r: number) =>
 const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 const r2 = (n: number) => Math.round(n * 100) / 100;
 
-const CARD = { x: 54, y: 138, w: 972, h: 1212, r: 40 }; // full outer card (fixed)
-const TEXT_X = 114; // left padding inside the panel
-const PAD_TOP = 84; // inner padding above headline
-const PAD_BOTTOM = 84; // inner padding below body
-const PHOTO_TOP = 138;
-const PHOTO_OVERLAP = 30; // photo overlaps the panel's rounded top
-const PANEL_TOP_MIN = 700; // panel can't grow past here (keep photo visible)
-const PANEL_TOP_MAX = 1180; // panel can't shrink below this
-const CANVAS_BOTTOM = 1350;
-
 const clamp = (v: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, v));
+
+// Preset-scaled geometry. Base values are the original 1080-space constants.
+function geom(preset: FormatPreset) {
+  const S = preset.w / 1080;
+  const SY = preset.h / 1350;
+  return {
+    S, SY,
+    CARD: { x: 54 * S, y: 138 * SY, w: 972 * S, h: 1212 * SY, r: 40 * S },
+    TEXT_X: 114 * S,
+    PAD_TOP: 84 * SY,
+    PAD_BOTTOM: 84 * SY,
+    PHOTO_TOP: 138 * SY,
+    PHOTO_OVERLAP: 30 * SY,
+    PANEL_TOP_MIN: 700 * SY,
+    PANEL_TOP_MAX: 1180 * SY,
+    CANVAS_BOTTOM: preset.h,
+  };
+}
+type Geom = ReturnType<typeof geom>;
 
 // Dynamic layout: the blue panel grows with the text block (anchored to the
 // bottom edge); the photo fills everything above it.
-function computeLayout(p: Layout1Params) {
+function computeLayout(p: Layout1Params, g: Geom) {
   const headLineH = p.headlineSize * 1.18;
   const bodyLineH = p.bodySize * 1.5;
   const gap = Math.round(p.bodySize * 0.9);
   const totalH = p.headlineLines.length * headLineH + gap + p.bodyLines.length * bodyLineH;
-  const panelTop = clamp(CANVAS_BOTTOM - (totalH + PAD_TOP + PAD_BOTTOM), PANEL_TOP_MIN, PANEL_TOP_MAX);
-  const panelH = CANVAS_BOTTOM - panelTop;
-  const photoH = panelTop + PHOTO_OVERLAP - PHOTO_TOP;
+  const panelTop = clamp(g.CANVAS_BOTTOM - (totalH + g.PAD_TOP + g.PAD_BOTTOM), g.PANEL_TOP_MIN, g.PANEL_TOP_MAX);
+  const panelH = g.CANVAS_BOTTOM - panelTop;
+  const photoH = panelTop + g.PHOTO_OVERLAP - g.PHOTO_TOP;
   return { headLineH, bodyLineH, gap, panelTop, panelH, photoH };
 }
 
 // Photo placement: cover the (dynamic) photo region, zoomed + panned. Clip crops.
-function photoPlacement(p: Layout1Params, photoH: number) {
-  const cover = Math.max(CARD.w / p.photoW, photoH / p.photoH);
+function photoPlacement(p: Layout1Params, g: Geom, photoH: number) {
+  const cover = Math.max(g.CARD.w / p.photoW, photoH / p.photoH);
   const s = cover * p.scale;
   const dw = p.photoW * s;
   const dh = p.photoH * s;
-  const dx = CARD.x + (CARD.w - dw) / 2 + p.focalX;
-  const dy = PHOTO_TOP + (photoH - dh) / 2 + p.focalY;
+  const dx = g.CARD.x + (g.CARD.w - dw) / 2 + p.focalX;
+  const dy = g.PHOTO_TOP + (photoH - dh) / 2 + p.focalY;
   return { dx: r2(dx), dy: r2(dy), dw: r2(dw), dh: r2(dh) };
 }
 
 export function buildLayout1Svg(p: Layout1Params): string {
   const c = COLORWAY_STYLES[p.colorway];
-  const L = computeLayout(p);
+  const g = geom(p.preset);
+  const S = g.S;
+  const L = computeLayout(p, g);
 
   // text block: top-anchored with PAD_TOP inside the (variable-height) panel.
   // headlineDY / bodyDY nudge each block vertically; left margin (TEXT_X) is fixed.
   const headlineDY = p.headlineDY ?? 0;
   const bodyDY = p.bodyDY ?? 0;
-  let cursor = L.panelTop + PAD_TOP + headlineDY;
+  const headTop = L.panelTop + g.PAD_TOP + headlineDY;
+  let cursor = headTop;
   const headTspans = p.headlineLines.map((line) => {
     const baseline = cursor + p.headlineSize * 0.82;
     cursor += L.headLineH;
-    return `<text x="${TEXT_X}" y="${r2(baseline)}" font-family="Kalam" font-weight="700" font-size="${p.headlineSize}" fill="${c.headline}">${esc(line)}</text>`;
+    return `<text x="${r2(g.TEXT_X)}" y="${r2(baseline)}" font-family="Kalam" font-weight="700" font-size="${p.headlineSize}" fill="${c.headline}">${esc(line)}</text>`;
   }).join('\n  ');
-  let bcur = L.panelTop + PAD_TOP + headlineDY + p.headlineLines.length * L.headLineH + L.gap + bodyDY;
+  const bodyTop = L.panelTop + g.PAD_TOP + headlineDY + p.headlineLines.length * L.headLineH + L.gap + bodyDY;
+  let bcur = bodyTop;
   const bodyTspans = p.bodyLines.map((line) => {
     const baseline = bcur + p.bodySize * 0.82;
     bcur += L.bodyLineH;
-    return `<text x="${TEXT_X}" y="${r2(baseline)}" font-family="Poppins" font-weight="400" font-size="${p.bodySize}" fill="${c.body}">${esc(line)}</text>`;
+    return `<text x="${r2(g.TEXT_X)}" y="${r2(baseline)}" font-family="Poppins" font-weight="400" font-size="${p.bodySize}" fill="${c.body}">${esc(line)}</text>`;
   }).join('\n  ');
 
-  // pill: auto-sized; side switchable. Text centered so padding stays symmetric.
-  const pillH = 47; const pillPadX = 27.5; const pillFont = 20;
-  const pillY = L.panelTop - pillH - 5;
-  const textW = p.pillTextWidth ?? p.hashtag.length * (pillFont * 0.56);
+  // pill: auto-sized; side switchable. Size scales with the card (ES = width factor S).
+  const ES = S;
+  const pillH = Math.round(47 * ES); const pillPadX = 27.5 * ES; const pillFont = 20 * ES;
+  const textW = (p.pillTextWidth ?? p.hashtag.length * (20 * 0.56)) * ES;
   const pillW = Math.round(textW + pillPadX * 2);
-  // mirror the left inset (35px from the card edge) on the right so it never touches the frame
-  const PILL_INSET = 35;
-  const pillX = (p.hashtagSide ?? 'left') === 'right' ? 1026 - PILL_INSET - pillW : 54 + PILL_INSET;
+  const side = p.hashtagSide ?? 'left';
+  // L1 is mask-relative: the pill sits just above the colored panel's rounded top and
+  // is inset from the card edges (NOT bottom-corner anchored like L2/L3). It tracks the
+  // panel as copy grows — the original Teacher-Story design tied to the masking card.
+  const PILL_INSET = 35 * S;
+  const pillY = L.panelTop - pillH - 5 * g.SY;
+  const pillX = side === 'right' ? g.CARD.x + g.CARD.w - PILL_INSET - pillW : g.CARD.x + PILL_INSET;
   const pill = `<rect x="${pillX}" y="${r2(pillY)}" width="${pillW}" height="${pillH}" rx="${pillH / 2}" fill="${c.pillBg}"/>
-  <text x="${r2(pillX + pillW / 2)}" y="${r2(pillY + 31)}" text-anchor="middle" font-family="Poppins" font-weight="600" font-size="${pillFont}" letter-spacing="0.5" fill="${c.pillText}">${esc(p.hashtag)}</text>`;
+  <text x="${r2(pillX + pillW / 2)}" y="${r2(pillY + 31 * ES)}" text-anchor="middle" font-family="Poppins" font-weight="600" font-size="${r2(pillFont)}" letter-spacing="${r2(0.5 * ES)}" fill="${c.pillText}">${esc(p.hashtag)}</text>`;
 
-  const ph = photoPlacement(p, L.photoH);
+  const ph = photoPlacement(p, g, L.photoH);
 
-  return `<svg width="1080" height="1350" viewBox="0 0 1080 1350" xmlns="http://www.w3.org/2000/svg">
+  // Logo: keep it clear of the masking card. Logo size scales by width (S) but the
+  // card top scales by height (SY), so on wide/short formats they would collide. If the
+  // logo's natural bottom would reach the card, scale it down to fit the top margin.
+  const logoMargin = 16 * g.SY;
+  const wantBottom = 108 * S; // (46 + 62) * S — natural logo bottom
+  const band = g.CARD.y - logoMargin; // room above the card top
+  const logoK = wantBottom > band ? band / wantBottom : 1;
+  const lw = 250 * S * logoK; const lh = 62 * S * logoK; const lx = 78 * S * logoK; const ly = 46 * S * logoK;
+  const [phoO, phoC] = gWrap(p.anim, 'photo', g.CARD.x + g.CARD.w / 2, g.PHOTO_TOP + L.photoH / 2, g.S, g.SY);
+  const [hO, hC] = gWrap(p.anim, 'headline', g.TEXT_X, headTop, g.S, g.SY);
+  const [bO, bC] = gWrap(p.anim, 'body', g.TEXT_X, bodyTop, g.S, g.SY);
+  const [piO, piC] = gWrap(p.anim, 'pill', pillX + pillW / 2, pillY + pillH / 2, g.S, g.SY);
+  const [loO, loC] = gWrap(p.anim, 'logo', lx + lw / 2, ly + lh / 2, g.S, g.SY);
+
+  return `<svg width="${p.preset.w}" height="${p.preset.h}" viewBox="0 0 ${p.preset.w} ${p.preset.h}" xmlns="http://www.w3.org/2000/svg">
   ${p.fontFaceCss ? `<defs><style>${p.fontFaceCss}</style></defs>` : ''}
-  <rect width="1080" height="1350" fill="#FFFFFF"/>
+  <rect width="${p.preset.w}" height="${p.preset.h}" fill="#FFFFFF"/>
   <defs>
-    <clipPath id="l1photo"><path d="${topRounded(CARD.x, PHOTO_TOP, CARD.w, L.photoH, CARD.r)}"/></clipPath>
+    <clipPath id="l1photo"><path d="${topRounded(g.CARD.x, g.PHOTO_TOP, g.CARD.w, L.photoH, g.CARD.r)}"/></clipPath>
   </defs>
 
   <!-- Blue panel: variable height, rounded top, square bottom (flush on the bottom edge) -->
-  <path d="${topRounded(CARD.x, L.panelTop, CARD.w, L.panelH, CARD.r)}" fill="${c.panelBg}"/>
+  <path d="${topRounded(g.CARD.x, L.panelTop, g.CARD.w, L.panelH, g.CARD.r)}" fill="${c.panelBg}"/>
 
   <g clip-path="url(#l1photo)">
-    <image href="${p.photoHref}" x="${ph.dx}" y="${ph.dy}" width="${ph.dw}" height="${ph.dh}" preserveAspectRatio="none"/>
+    ${phoO}<image href="${p.photoHref}" x="${ph.dx}" y="${ph.dy}" width="${ph.dw}" height="${ph.dh}" preserveAspectRatio="none"/>${phoC}
   </g>
 
   <!-- Card border: rounded top, square bottom -->
-  <path d="${topRounded(CARD.x, CARD.y, CARD.w, CARD.h, CARD.r)}" fill="none" stroke="${c.border}" stroke-width="5"/>
+  <path d="${topRounded(g.CARD.x, g.CARD.y, g.CARD.w, g.CARD.h, g.CARD.r)}" fill="none" stroke="${c.border}" stroke-width="5"/>
 
-  ${pill}
-  ${headTspans}
-  ${bodyTspans}
+  ${piO}${pill}${piC}
+  ${hO}${headTspans}${hC}
+  ${bO}${bodyTspans}${bC}
 
-  <image href="${p.logoHref}" x="78" y="46" width="250" height="62"/>
+  ${loO}<image href="${p.logoHref}" x="${r2(lx)}" y="${r2(ly)}" width="${r2(lw)}" height="${r2(lh)}"/>${loC}
 </svg>`;
 }
 
-// Approx photo area in 1080-space for the interactive drag overlay.
+// Approx photo area in 1080-space for the interactive drag overlay (legacy).
 export const PHOTO_REGION = { x: 54, y: 138, w: 972, h: 762 };

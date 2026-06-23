@@ -3,12 +3,19 @@ import { wrap, measure } from '../textwrap';
 import { ASSETS } from '../assets';
 import { getLogoColor, getLogoWhite } from '../settings';
 import { uid } from '../model';
-import type { LayoutModule, PostDoc, BuildOpts } from '../model';
+import { getZone } from '../presets/zones';
+import { getTypeScale } from '../presets/typeScale';
+import type { LayoutModule, PostDoc, BuildOpts, Rect } from '../model';
+import type { FormatPreset } from '../presets/index';
 
 export const layout3: LayoutModule = {
   id: 'L3',
   label: 'Beyond (Cutout)',
-  photoRegion: { x: 400, y: 300, w: 680, h: 1050 },
+
+  photoRegion(preset: FormatPreset): Rect {
+    const z = getZone('L3', preset.id);
+    return z.photo ?? { x: 0, y: 0, w: preset.w, h: preset.h };
+  },
 
   newDoc(): PostDoc {
     const now = Date.now();
@@ -27,29 +34,42 @@ export const layout3: LayoutModule = {
       hashtagSide: 'left',
       shape: { x: 0, y: 0, rotate: 0, scale: 1 },
       photo: { src: ASSETS.boy.href, w: ASSETS.boy.w, h: ASSETS.boy.h, scale: 1, focalX: 0, focalY: 0 },
+      preset: 'feed-portrait',
+      photoFocalPoints: {},
       createdAt: now,
       updatedAt: now,
     };
   },
 
-  build(doc: PostDoc, opts: BuildOpts = {}): string {
-    const headlineLines = wrap(doc.headline, `700 ${doc.headlineSize}px Kalam`, L3_HEAD_MAX_W);
-    const bodyLines = wrap(doc.body, `400 ${doc.bodySize}px Poppins`, L3_BODY_MAX_W);
+  build(doc: PostDoc, preset: FormatPreset, opts: BuildOpts = {}): string {
+    const isLandscape = preset.orientation === 'landscape';
+    const ts = getTypeScale('L3', preset.id);
+    const headlineSize = Math.round(doc.headlineSize * ts.headline);
+    const bodySize = Math.round(doc.bodySize * ts.body);
+    const zone = getZone('L3', preset.id);
+    const headMaxW = isLandscape ? zone.content.w - 60 : L3_HEAD_MAX_W;
+    const bodyMaxW = isLandscape ? zone.content.w - 60 : L3_BODY_MAX_W;
+    const headlineLines = wrap(doc.headline, `700 ${headlineSize}px Kalam`, headMaxW);
+    const bodyLines = wrap(doc.body, `400 ${bodySize}px Poppins`, bodyMaxW);
     const pillTextWidth = measure(doc.hashtag, '600 20px Poppins') + 0.5 * Math.max(0, doc.hashtag.length - 1);
     const ph = doc.photo;
+    const fp = doc.photoFocalPoints?.[preset.id];
+    const focalX = fp?.focalX ?? ph?.focalX ?? 0;
+    const focalY = fp?.focalY ?? ph?.focalY ?? 0;
     return buildLayout3Svg({
       headlineLines,
       bodyLines,
       hashtag: doc.hashtag,
       colorway: doc.colorway,
+      preset,
       photoHref: opts.photoHref ?? ph?.src ?? ASSETS.boy.href,
       photoW: ph?.w ?? ASSETS.boy.w,
       photoH: ph?.h ?? ASSETS.boy.h,
       scale: ph?.scale ?? 1,
-      focalX: ph?.focalX ?? 0,
-      focalY: ph?.focalY ?? 0,
-      headlineSize: doc.headlineSize,
-      bodySize: doc.bodySize,
+      focalX,
+      focalY,
+      headlineSize,
+      bodySize,
       headlineDY: doc.headlineDY,
       bodyDY: doc.bodyDY,
       hashtagSide: doc.hashtagSide,
@@ -61,6 +81,7 @@ export const layout3: LayoutModule = {
       logoHref: opts.logoHref ?? (doc.colorway === 'C' ? getLogoColor() : getLogoWhite()),
       pillTextWidth,
       fontFaceCss: opts.fontFaceCss,
+      anim: opts.anim,
     });
   },
 };

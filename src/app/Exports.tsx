@@ -1,6 +1,7 @@
 import { useMemo, useRef, useState } from 'react';
 import type { ChangeEvent, CSSProperties } from 'react';
 import { getModule } from '../layouts/registry';
+import { presetOf } from '../presets/index';
 import { store, useStoreList } from '../store';
 import {
   exportDocImage, exportColorwayVariants, exportCaptionsCsv,
@@ -13,8 +14,9 @@ const h2: CSSProperties = { color: 'var(--text-primary)', fontSize: 14, fontWeig
 const small: CSSProperties = { fontSize: 11.5, color: 'var(--text-tertiary)' };
 
 function Thumb({ doc }: { doc: PostDoc }) {
-  const svg = useMemo(() => { try { return getModule(doc.layoutId).build(doc); } catch { return ''; } }, [doc]);
-  return <div style={{ width: '100%', aspectRatio: '1080 / 1350', background: 'var(--bg-canvas)', borderRadius: 'var(--r-sm)' }} dangerouslySetInnerHTML={{ __html: svg.replace('<svg ', '<svg style="width:100%;height:100%;display:block" ') }} />;
+  const preset = presetOf(doc.preset);
+  const svg = useMemo(() => { try { return getModule(doc.layoutId).build(doc, preset); } catch { return ''; } }, [doc, preset]);
+  return <div style={{ width: '100%', aspectRatio: `${preset.w} / ${preset.h}`, background: 'var(--bg-canvas)', borderRadius: 'var(--r-sm)' }} dangerouslySetInnerHTML={{ __html: svg.replace('<svg ', '<svg style="width:100%;height:100%;display:block" ') }} />;
 }
 
 export default function Exports() {

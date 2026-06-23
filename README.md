@@ -49,6 +49,20 @@ Sign-in is **email + password**. Access is gated by an allow-list in the databas
 
 "Use offline on this device" on the login screen gives a local-only fallback (no shared library).
 
+## Animated video export (MP4 / GIF)
+
+The editor's **Animation** panel plays a choreography preview and exports the post as a
+short video (per-element entrance + Ken Burns photo push-in). This needs two browser-only
+packages — install once:
+
+```bash
+npm install mp4-muxer gifenc
+```
+
+The live preview and everything else work without them; only the **Export MP4 / Export GIF**
+buttons require the install. MP4 uses WebCodecs (Chrome/Edge, or Safari 16.4+); GIF works
+everywhere but is downscaled for size. Choreography styles live in `src/anim/styles.ts`.
+
 ## Self-contained build (optional)
 
 ```bash

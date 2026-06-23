@@ -4,6 +4,7 @@ import Dashboard from './Dashboard';
 import Editor from './Editor';
 import Exports from './Exports';
 import BrandSettings from './BrandSettings';
+import PhotoLibrary from '../photoLibrary/PhotoLibrary';
 import { getModule } from '../layouts/registry';
 import { BUCKET_RULES, preferredColorway } from '../logic/mappings';
 import type { Bucket } from '../logic/mappings';
@@ -13,10 +14,11 @@ import { getEmail, signOut } from '../cloud';
 import { ASSETS } from '../assets';
 import type { LayoutId, PostDoc } from '../model';
 
-type Section = 'dashboard' | 'editor' | 'exports' | 'brand';
+type Section = 'dashboard' | 'editor' | 'library' | 'exports' | 'brand';
 const TABS: { id: Section; label: string }[] = [
   { id: 'dashboard', label: 'Dashboard' },
   { id: 'editor', label: 'Editor' },
+  { id: 'library', label: 'Library' },
   { id: 'exports', label: 'Exports' },
   { id: 'brand', label: 'Brand' },
 ];
@@ -77,6 +79,7 @@ export default function Shell({ signedIn }: { signedIn: boolean }) {
 
       {section === 'dashboard' && <Dashboard onNew={openNew} onNewFromBucket={openNewFromBucket} onEdit={openEdit} />}
       {section === 'editor' && doc && <Editor key={doc.id} initialDoc={doc} onBack={backToDash} />}
+      {section === 'library' && <PhotoLibrary />}
       {section === 'exports' && <Exports />}
       {section === 'brand' && <BrandSettings />}
     </div>
