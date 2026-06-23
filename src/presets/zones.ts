@@ -102,10 +102,65 @@ const L3_ZONES: Record<PresetId, ZoneMap> = {
   },
 };
 
+// ─── Layout 4: Aurora (gradient wash card) ──────────────────────────────────
+// No required photo; if present it occupies the right 55% behind the gradient.
+// Text lives on the left from y≈200 downward. No hard panel line.
+
+const L4_ZONES: Record<PresetId, ZoneMap> = {
+  'feed-portrait': {
+    photo: { x: 0, y: 0, w: 1080, h: 1350 },
+    content: { x: 72, y: 200, w: 840, h: 1050 },
+    direction: 'column',
+  },
+  'feed-square': {
+    photo: { x: 0, y: 0, w: 1080, h: 1080 },
+    content: { x: 72, y: 180, w: 840, h: 820 },
+    direction: 'column',
+  },
+  'story-reel': {
+    photo: { x: 0, y: 0, w: 1080, h: 1920 },
+    content: { x: 72, y: 200, w: 840, h: 1560 },
+    direction: 'column',
+  },
+  'landscape': {
+    photo: { x: 0, y: 0, w: 1920, h: 1080 },
+    content: { x: 72, y: 120, w: 900, h: 840 },
+    direction: 'column',
+  },
+};
+
+// ─── Layout 5: Gradient Panel (gradient top 55% + light panel bottom 45%) ────
+// Photo fills the gradient zone (top). Text lives in the panel (bottom).
+
+const L5_ZONES: Record<PresetId, ZoneMap> = {
+  'feed-portrait': {
+    photo: { x: 0, y: 0, w: 1080, h: 742 },    // top 55% in base space
+    content: { x: 72, y: 802, w: 936, h: 480 }, // panel zone (742 + 60 pad)
+    direction: 'column',
+  },
+  'feed-square': {
+    photo: { x: 0, y: 0, w: 1080, h: 594 },     // ~55% of 1080
+    content: { x: 72, y: 654, w: 936, h: 350 },
+    direction: 'column',
+  },
+  'story-reel': {
+    photo: { x: 0, y: 0, w: 1080, h: 1056 },    // ~55% of 1920
+    content: { x: 72, y: 1116, w: 936, h: 740 },
+    direction: 'column',
+  },
+  'landscape': {
+    photo: { x: 0, y: 0, w: 1920, h: 594 },
+    content: { x: 72, y: 654, w: 1200, h: 380 },
+    direction: 'column',
+  },
+};
+
 export const LAYOUT_ZONES: Record<string, Record<PresetId, ZoneMap>> = {
   L1: L1_ZONES,
   L2: L2_ZONES,
   L3: L3_ZONES,
+  L4: L4_ZONES,
+  L5: L5_ZONES,
 };
 
 export function getZone(layoutId: string, presetId: PresetId): ZoneMap {

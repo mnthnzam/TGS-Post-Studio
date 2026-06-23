@@ -4,7 +4,7 @@ import type { FormatPreset, PresetId } from './presets/index';
 import type { AnimMap } from './anim/types';
 
 export type ColorwayId = 'A' | 'B' | 'C';
-export type LayoutId = 'L1' | 'L2' | 'L3';
+export type LayoutId = 'L1' | 'L2' | 'L3' | 'L4' | 'L5';
 
 export interface PhotoVal {
   src: string;

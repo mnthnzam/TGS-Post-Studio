@@ -35,6 +35,20 @@ const TYPE_SCALE: Record<string, Record<PresetId, TypeScale>> = {
     'story-reel': { headline: 1.12, body: 1.06 },
     'landscape': { headline: 1.35, body: 1.26 },
   },
+  // L4 — Aurora (gradient wash card): full-bleed, text top-left.
+  L4: {
+    'feed-portrait': { headline: 1.0, body: 1.0 },
+    'feed-square': { headline: 0.90, body: 0.94 },
+    'story-reel': { headline: 1.10, body: 1.06 },
+    'landscape': { headline: 1.30, body: 1.24 },
+  },
+  // L5 — Gradient Panel: text lives in the bottom panel.
+  L5: {
+    'feed-portrait': { headline: 1.0, body: 1.0 },
+    'feed-square': { headline: 0.88, body: 0.93 },
+    'story-reel': { headline: 1.08, body: 1.05 },
+    'landscape': { headline: 1.28, body: 1.22 },
+  },
 };
 
 export function getTypeScale(layoutId: string, presetId: PresetId): TypeScale {
