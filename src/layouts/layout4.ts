@@ -11,6 +11,7 @@
 
 import { buildLayout4Svg, L4_HEAD_MAX_W, L4_BODY_MAX_W } from '../svg/layout4';
 import { wrap, measure } from '../textwrap';
+import { ASSETS } from '../assets';
 import { getLogoWhite, getLogoColor } from '../settings';
 import { uid } from '../model';
 import { getZone } from '../presets/zones';
@@ -44,7 +45,7 @@ export const layout4: LayoutModule = {
       headlineDY: 0,
       bodyDY: 0,
       hashtagSide: 'left',   // ← L4 designed position: BOTTOM-LEFT
-      photo: null,           // Gradient-wash card; photo optional
+      photo: { src: ASSETS.teacher.href, w: ASSETS.teacher.w, h: ASSETS.teacher.h, scale: 1, focalX: 0, focalY: 0 },
       preset: 'feed-portrait',
       photoFocalPoints: {},
       createdAt: now,

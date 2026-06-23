@@ -129,28 +129,28 @@ const L4_ZONES: Record<PresetId, ZoneMap> = {
   },
 };
 
-// ─── Layout 5: Gradient Panel (gradient top 55% + light panel bottom 45%) ────
+// ─── Layout 5: Gradient Panel (gradient top 65% + light panel bottom 35%) ────
 // Photo fills the gradient zone (top). Text lives in the panel (bottom).
 
 const L5_ZONES: Record<PresetId, ZoneMap> = {
   'feed-portrait': {
-    photo: { x: 0, y: 0, w: 1080, h: 742 },    // top 55% in base space
-    content: { x: 72, y: 802, w: 936, h: 480 }, // panel zone (742 + 60 pad)
+    photo: { x: 0, y: 0, w: 1080, h: 878 },    // top 65% in base space
+    content: { x: 72, y: 938, w: 936, h: 372 }, // panel zone (878 + 60 pad)
     direction: 'column',
   },
   'feed-square': {
-    photo: { x: 0, y: 0, w: 1080, h: 594 },     // ~55% of 1080
-    content: { x: 72, y: 654, w: 936, h: 350 },
+    photo: { x: 0, y: 0, w: 1080, h: 702 },     // ~65% of 1080
+    content: { x: 72, y: 750, w: 936, h: 300 },
     direction: 'column',
   },
   'story-reel': {
-    photo: { x: 0, y: 0, w: 1080, h: 1056 },    // ~55% of 1920
-    content: { x: 72, y: 1116, w: 936, h: 740 },
+    photo: { x: 0, y: 0, w: 1080, h: 1249 },    // ~65% of 1920
+    content: { x: 72, y: 1334, w: 936, h: 546 },
     direction: 'column',
   },
   'landscape': {
-    photo: { x: 0, y: 0, w: 1920, h: 594 },
-    content: { x: 72, y: 654, w: 1200, h: 380 },
+    photo: { x: 0, y: 0, w: 1920, h: 702 },
+    content: { x: 72, y: 750, w: 1200, h: 300 },
     direction: 'column',
   },
 };

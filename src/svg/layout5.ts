@@ -65,8 +65,8 @@ const COLORWAYS: Record<ColorwayId, CW> = {
 };
 
 // Base-space geometry
-// SPLIT is where the gradient zone ends and the panel begins (55% of 1350)
-const SPLIT_Y_BASE  = 742;   // ~55% of 1350
+// SPLIT is where the gradient zone ends and the panel begins (65% of 1350)
+const SPLIT_Y_BASE  = 878;   // ~65% of 1350 — larger gradient, shorter text panel
 const TEXT_X_BASE   = 72;
 const TEXT_TOP_PAD  = 60;    // padding from panel top to headline
 const BODY_GAP_BASE = 32;    // gap between headline block bottom and body top
