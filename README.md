@@ -33,21 +33,9 @@ Saved posts sync to a shared Supabase library; `localStorage` is a local cache s
 
 Connection lives in `src/cloud-config.ts` (the anon key is public by design — row-level security + auth protect the data).
 
-Sign-in is **email + password**. Access is gated by an allow-list in the database (`team_members` table + row-level security): only listed emails can read or write the library. Anyone else who signs in is authenticated but can access nothing.
+**No login** — the shared library is open: anyone who opens the app reads/writes the same posts. The database policies allow the public (anon) key full access to the `posts` table; the client uses that key directly. If no internet, the app falls back to the local cache.
 
-**Required setup in the Supabase dashboard** (project `tgs-post-studio`):
-
-- **Authentication → Providers → Email → turn OFF "Confirm email"** (so account creation logs the user in immediately, with no email step). The allow-list is the real gate, so this is safe.
-
-**To add a team member:**
-
-1. Add their email to the allow-list — ask me, or run in **SQL Editor**:
-   ```sql
-   insert into team_members (email) values ('person@zamstars.com') on conflict do nothing;
-   ```
-2. They open the app, click **Create account**, enter that email + a password → they're in.
-
-"Use offline on this device" on the login screen gives a local-only fallback (no shared library).
+> Note: this is intentionally open — anyone with the URL can edit or delete any post. To re-introduce access control later, restore the allow-list/RLS policies and the email+password login (kept in `src/cloud.ts` and `src/app/Login.tsx`).
 
 ## Animated video export (MP4 / GIF)
 

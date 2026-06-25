@@ -10,7 +10,6 @@ import { BUCKET_RULES, preferredColorway } from '../logic/mappings';
 import type { Bucket } from '../logic/mappings';
 import { getBucketHashtag } from '../settings';
 import { useTheme } from '../ui/theme';
-import { getEmail, signOut } from '../cloud';
 import { ASSETS } from '../assets';
 import type { LayoutId, PostDoc } from '../model';
 
@@ -30,11 +29,10 @@ const tabStyle = (active: boolean): CSSProperties => ({
   background: active ? 'var(--accent-weak)' : 'transparent', color: active ? 'var(--accent)' : 'var(--text-secondary)', border: 'none',
 });
 
-export default function Shell({ signedIn }: { signedIn: boolean }) {
+export default function Shell() {
   const [section, setSection] = useState<Section>('dashboard');
   const [doc, setDoc] = useState<PostDoc | null>(null);
   const [theme, toggleTheme] = useTheme();
-  const email = getEmail();
 
   const openNew = (id: LayoutId) => { setDoc(getModule(id).newDoc()); setSection('editor'); };
   const openNewFromBucket = (b: Bucket) => {
@@ -61,20 +59,7 @@ export default function Shell({ signedIn }: { signedIn: boolean }) {
             </button>
           ))}
         </nav>
-        <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 10 }}>
-          {signedIn ? (
-            <>
-              <span style={{ fontSize: 11.5, color: 'var(--text-tertiary)', fontFamily: 'var(--font-mono)' }} title="Shared library — synced">● {email}</span>
-              <button onClick={() => { signOut().finally(() => window.location.reload()); }} style={accountBtn}>Sign out</button>
-            </>
-          ) : (
-            <>
-              <span style={{ fontSize: 11.5, color: 'var(--text-tertiary)', fontFamily: 'var(--font-mono)' }} title="Local only — not synced">○ Offline</span>
-              <button onClick={() => window.location.reload()} style={accountBtn}>Sign in</button>
-            </>
-          )}
-          <button onClick={toggleTheme} title="Toggle theme" style={accountBtn}>{theme === 'dark' ? 'Light' : 'Dark'}</button>
-        </div>
+        <button onClick={toggleTheme} title="Toggle theme" style={{ ...accountBtn, marginLeft: 'auto' }}>{theme === 'dark' ? 'Light' : 'Dark'}</button>
       </header>
 
       {section === 'dashboard' && <Dashboard onNew={openNew} onNewFromBucket={openNewFromBucket} onEdit={openEdit} />}

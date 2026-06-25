@@ -2,7 +2,7 @@
 import { useSyncExternalStore } from 'react';
 import type { PostDoc } from './model';
 import { cloudEnabled } from './cloud-config';
-import { isAuthed, cloudList, cloudUpsert, cloudDelete } from './cloud';
+import { cloudList, cloudUpsert, cloudDelete } from './cloud';
 
 const KEY = 'tgs.posts.v1';
 
@@ -25,7 +25,8 @@ function rebuild() { snapshot = sortList(readAll()); subs.forEach((cb) => cb());
 const subs = new Set<() => void>();
 function subscribe(cb: () => void) { subs.add(cb); return () => { subs.delete(cb); }; }
 
-const cloudActive = () => cloudEnabled && isAuthed();
+// No login: the shared library is open, so the cloud is active whenever configured.
+const cloudActive = () => cloudEnabled;
 
 export const store = {
   list(): PostDoc[] { return snapshot; },
