@@ -61,7 +61,7 @@ for (const layout of LAYOUTS) {
 const html = `<!doctype html>
 <html lang="en"><head>
 <meta charset="utf-8" />
-<title>TGS Post Studio — Fidelity Preview</title>
+<title>TGS Studio — Fidelity Preview</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
@@ -77,7 +77,7 @@ h2 { color:rgba(255,255,255,0.6); font-size:13px; font-weight:600; margin:0 0 12
 .cell-label { color:rgba(255,255,255,0.35); font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; }
 </style></head>
 <body>
-<h1>TGS Post Studio — Fidelity Preview</h1>
+<h1>TGS Studio — Fidelity Preview</h1>
 <div class="sub">Real React components, server-rendered. 3 layouts × 3 colorways + 1 boosted each. Source of truth: TGS_Design_System_v1.md</div>
 ${rows}
 </body></html>`;

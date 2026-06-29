@@ -1,4 +1,4 @@
-# TGS Post Studio — Expansion Plan
+# TGS Studio — Expansion Plan
 
 From a single Layout-1 editor → a multi-layout, multi-section app.
 

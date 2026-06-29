@@ -54,7 +54,7 @@ export default function Generator() {
       <div style={{ width: 340, padding: 20, display: 'flex', flexDirection: 'column', gap: 14, borderRight: '1px solid #2a2d39', overflowY: 'auto' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#FFC352' }} />
-          <strong style={{ color: '#fff', fontSize: 13, letterSpacing: '0.05em' }}>TGS POST STUDIO</strong>
+          <strong style={{ color: '#fff', fontSize: 13, letterSpacing: '0.05em' }}>TGS STUDIO</strong>
         </div>
 
         <div>

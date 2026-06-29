@@ -129,7 +129,7 @@ export default function Layout1Studio() {
       <div style={{ width: 360, padding: 22, display: 'flex', flexDirection: 'column', gap: 14, borderRight: '1px solid #2a2d39', overflowY: 'auto', maxHeight: '100vh' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#FFC352' }} />
-          <strong style={{ color: '#fff', fontSize: 13, letterSpacing: '0.05em' }}>TGS POST STUDIO · Layout 1</strong>
+          <strong style={{ color: '#fff', fontSize: 13, letterSpacing: '0.05em' }}>TGS STUDIO · Layout 1</strong>
         </div>
 
         <div>

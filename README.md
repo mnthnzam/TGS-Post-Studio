@@ -1,4 +1,4 @@
-# TGS Post Studio
+# TGS Studio
 
 An in-browser studio for producing on-brand Tatva Global School social posts (1080×1350). Three Figma-faithful layouts, full editor (copy, type, photo pan/zoom, hashtag side, decorative shapes), saved-post library, exports (PNG/JPG, colorway variants, captions, project backup), a brand style-guide export (PDF/HTML/PNG), bucket-driven creation, and a Brand settings panel. Light/dark UI.
 
