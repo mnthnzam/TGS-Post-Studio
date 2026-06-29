@@ -2,10 +2,10 @@ import { describe, it, expect } from 'vitest';
 import { TYPE, FONT_DISPLAY } from './typography';
 
 describe('typography', () => {
-  it('every Kalam preset is font-style normal (§4.1 rule, never italic)', () => {
+  it('every DM Serif Display preset has fontWeight 400 (single-weight font)', () => {
     for (const preset of Object.values(TYPE)) {
       if (preset.fontFamily === FONT_DISPLAY) {
-        expect(preset.fontStyle).toBe('normal');
+        expect(preset.fontWeight).toBe(400);
       }
     }
   });
@@ -14,10 +14,10 @@ describe('typography', () => {
     expect(TYPE.displayL1.fontSize).toBe(36);
     expect(TYPE.displayL2.fontSize).toBe(48);
     expect(TYPE.displayL3.fontSize).toBe(44);
-    expect(TYPE.displayL1.fontWeight).toBe(700);
+    expect(TYPE.displayL1.fontWeight).toBe(400); // DM Serif Display is single-weight
   });
 
-  it('default body weight is Poppins 500 (bodyLight)', () => {
+  it('default body weight is DM Sans 500 (bodyLight)', () => {
     expect(TYPE.bodyLight.fontWeight).toBe(500);
   });
 

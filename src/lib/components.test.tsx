@@ -23,10 +23,10 @@ describe('Stage', () => {
 });
 
 describe('Logo (non-negotiable §5)', () => {
-  it('sits fixed top-left at 50,50, topmost', () => {
+  it('sits fixed top-left at 54,54, topmost (brand master July 2026)', () => {
     render(<Logo variant="white" />);
     const logo = screen.getByTestId('logo');
-    expect(logo).toHaveStyle({ position: 'absolute', left: '50px', top: '50px', zIndex: '20' });
+    expect(logo).toHaveStyle({ position: 'absolute', left: '54px', top: '54px', zIndex: '20' });
   });
   it('dark variant renders TATVA in Tatva Blue', () => {
     render(<Logo variant="dark" />);
@@ -35,10 +35,10 @@ describe('Logo (non-negotiable §5)', () => {
 });
 
 describe('HashtagPill (non-negotiable §6)', () => {
-  it('organic pill is a full pill anchored bottom-right', () => {
+  it('organic pill is a full pill anchored bottom-left at 54px (brand master July 2026)', () => {
     render(<HashtagPill hashtag="#TatvaPulse" />);
     const pill = screen.getByTestId('pill');
-    expect(pill).toHaveStyle({ position: 'absolute', right: '50px', bottom: '50px', borderRadius: '999px' });
+    expect(pill).toHaveStyle({ position: 'absolute', bottom: '54px', borderRadius: '999px' });
   });
   it('boosted pill adds the spec CTA line and squares to radius 12', () => {
     render(<HashtagPill hashtag="#TatvaPulse" boosted />);

@@ -61,9 +61,9 @@ export const layout4: LayoutModule = {
     const isLandscape = preset.orientation === 'landscape';
     const headMaxW = isLandscape ? zone.content.w - 60 : L4_HEAD_MAX_W;
     const bodyMaxW = isLandscape ? zone.content.w - 60 : L4_BODY_MAX_W;
-    const headlineLines = wrap(doc.headline, `700 ${headlineSize}px Kalam`, headMaxW);
-    const bodyLines = wrap(doc.body, `400 ${bodySize}px Poppins`, bodyMaxW);
-    const pillTextWidth = measure(doc.hashtag, '600 19px Poppins') + 0.5 * Math.max(0, doc.hashtag.length - 1);
+    const headlineLines = wrap(doc.headline, `400 ${headlineSize}px DM Serif Display`, headMaxW);
+    const bodyLines = wrap(doc.body, `400 ${bodySize}px DM Sans`, bodyMaxW);
+    const pillTextWidth = measure(doc.hashtag, '700 19px DM Sans') + 0.5 * Math.max(0, doc.hashtag.length - 1);
     const ph = doc.photo;
     const fp = doc.photoFocalPoints?.[preset.id];
     const focalX = fp?.focalX ?? ph?.focalX ?? 0;

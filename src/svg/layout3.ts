@@ -107,14 +107,14 @@ export function buildLayout3Svg(p: Layout3Params): string {
   const headTspans = p.headlineLines.map((line) => {
     const baseline = cur + p.headlineSize * 0.86;
     cur += headLineH;
-    return `<text x="${r2(TEXT_X)}" y="${r2(baseline)}" font-family="Kalam" font-weight="700" font-size="${p.headlineSize}" fill="${c.headline}">${esc(line)}</text>`;
+    return `<text x="${r2(TEXT_X)}" y="${r2(baseline)}" font-family="DM Serif Display" font-weight="400" font-size="${p.headlineSize}" fill="${c.headline}">${esc(line)}</text>`;
   }).join('\n  ');
   const bodyTop = BODY_TOP * SY + bodyDY;
   let bcur = bodyTop;
   const bodyTspans = p.bodyLines.map((line) => {
     const baseline = bcur + p.bodySize * 0.82;
     bcur += bodyLineH;
-    return `<text x="${r2(TEXT_X)}" y="${r2(baseline)}" font-family="Poppins" font-weight="400" font-size="${p.bodySize}" fill="${c.body}">${esc(line)}</text>`;
+    return `<text x="${r2(TEXT_X)}" y="${r2(baseline)}" font-family="DM Sans" font-weight="400" font-size="${p.bodySize}" fill="${c.body}">${esc(line)}</text>`;
   }).join('\n  ');
 
   // pill: side switchable. Bottom-anchored with equal corner padding.
@@ -126,7 +126,7 @@ export function buildLayout3Svg(p: Layout3Params): string {
   const side = p.hashtagSide ?? 'left';
   const { x: pillX, y: pillY } = pillAnchor(p.preset, side, pillW, pillH);
   const pill = `<rect x="${pillX}" y="${r2(pillY)}" width="${pillW}" height="${pillH}" rx="${pillH / 2}" fill="${c.pillBg}"/>
-  <text x="${r2(pillX + pillW / 2)}" y="${r2(pillY + 31 * ES)}" text-anchor="middle" font-family="Poppins" font-weight="600" font-size="${r2(pillFont)}" letter-spacing="${r2(0.5 * ES)}" fill="${c.pillText}">${esc(p.hashtag)}</text>`;
+  <text x="${r2(pillX + pillW / 2)}" y="${r2(pillY + 31 * ES)}" text-anchor="middle" font-family="DM Sans" font-weight="700" font-size="${r2(pillFont)}" letter-spacing="${r2(0.5 * ES)}" fill="${c.pillText}">${esc(p.hashtag)}</text>`;
 
   const cut = cutoutPlacement(p);
 

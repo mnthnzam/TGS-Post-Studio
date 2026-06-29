@@ -42,7 +42,7 @@ export function Photo({
             alignItems: 'center',
             justifyContent: 'center',
             color: 'rgba(255,255,255,0.7)',
-            fontFamily: "'Poppins', sans-serif",
+            fontFamily: "'DM Sans', sans-serif",
             fontSize: 16,
             letterSpacing: '0.1em',
             textTransform: 'uppercase',

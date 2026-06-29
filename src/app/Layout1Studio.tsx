@@ -43,7 +43,7 @@ function wrap(text: string, font: string, maxW: number): string[] {
 
 const field: CSSProperties = {
   width: '100%', padding: '8px 10px', background: '#23252f', border: '1px solid #383b47',
-  borderRadius: 6, color: '#e8e8ea', fontSize: 13, fontFamily: 'Poppins, sans-serif', boxSizing: 'border-box',
+  borderRadius: 6, color: '#e8e8ea', fontSize: 13, fontFamily: 'DM Sans, sans-serif', boxSizing: 'border-box',
 };
 const label: CSSProperties = { fontSize: 10, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#7a7e8c', marginBottom: 4, display: 'block' };
 const row: CSSProperties = { display: 'flex', gap: 10 };
@@ -71,15 +71,15 @@ export default function Layout1Studio() {
 
   // Wrap text to the panel width and measure the pill (recompute once fonts load).
   const headlineLines = useMemo(
-    () => wrap(headline, `700 ${headlineSize}px Kalam`, TEXT_MAX_W),
+    () => wrap(headline, `400 ${headlineSize}px DM Serif Display`, TEXT_MAX_W),
     [headline, headlineSize, fontsReady],
   );
   const bodyLines = useMemo(
-    () => wrap(body, `400 ${bodySize}px Poppins`, TEXT_MAX_W),
+    () => wrap(body, `400 ${bodySize}px DM Sans`, TEXT_MAX_W),
     [body, bodySize, fontsReady],
   );
   const pillTextWidth = useMemo(
-    () => measure(hashtag, '600 20px Poppins'),
+    () => measure(hashtag, '700 20px DM Sans'),
     [hashtag, fontsReady],
   );
 
@@ -124,7 +124,7 @@ export default function Layout1Studio() {
   };
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: '#1a1c26', fontFamily: 'Poppins, sans-serif' }}>
+    <div style={{ display: 'flex', minHeight: '100vh', background: '#1a1c26', fontFamily: 'DM Sans, sans-serif' }}>
       {/* Controls */}
       <div style={{ width: 360, padding: 22, display: 'flex', flexDirection: 'column', gap: 14, borderRight: '1px solid #2a2d39', overflowY: 'auto', maxHeight: '100vh' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>

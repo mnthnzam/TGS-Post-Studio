@@ -9,7 +9,7 @@ import type { ColorwayId, LayoutId, PostDoc } from '../model';
 
 const USE_CASES: Record<LayoutId, string> = {
   L1: 'Pulse · Director · Teacher · Voices',
-  L2: 'Labs · Experiential · 3Cs',
+  L2: 'Labs · Experiential · Four Cs',
   L3: 'Values · Sports · Culture · Alumni',
   L4: 'Values · Vision · Announcements',
   L5: 'Confidence · Moments · Experiential',

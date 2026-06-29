@@ -35,7 +35,7 @@ export default function BrandSettings() {
     <div style={{ flex: 1, overflowY: 'auto', padding: 30, display: 'flex', flexDirection: 'column', gap: 30, maxWidth: 1180 }}>
       <div>
         <h2 style={h2}>Logos</h2>
-        <div style={small}>Override the brand logo (SVG or PNG). Leave default if unsure. Fonts are locked to Kalam + Poppins.</div>
+        <div style={small}>Override the brand logo (SVG or PNG). Leave default if unsure. Fonts are locked to DM Serif Display + DM Sans.</div>
         <div style={{ display: 'flex', gap: 20, marginTop: 14, flexWrap: 'wrap' }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             <div style={logoCard('#F7F7F7')}><img src={getLogoColor()} alt="" style={{ maxWidth: '80%', maxHeight: 70 }} /></div>

@@ -7,7 +7,7 @@ describe('buildFileName', () => {
     expect(name).toMatch(/^tgs-values-based-\d+\.png$/);
   });
   it('handles messy labels and jpg', () => {
-    const name = buildFileName('3Cs in Action!', 'jpg');
-    expect(name).toMatch(/^tgs-3cs-in-action-\d+\.jpg$/);
+    const name = buildFileName('Four Cs in Action!', 'jpg');
+    expect(name).toMatch(/^tgs-four-cs-in-action-\d+\.jpg$/);
   });
 });

@@ -7,11 +7,12 @@ import logoColor from './assets/logo-color.svg';
 import logoWhite from './assets/logo-white.svg';
 import iconColor from './assets/icon-color.svg';
 import iconWhite from './assets/icon-white.svg';
-import KalamBold from './assets/Kalam-Bold.ttf';
-import KalamRegular from './assets/Kalam-Regular.ttf';
-import PoppinsRegular from './assets/Poppins-Regular.ttf';
-import PoppinsSemiBold from './assets/Poppins-SemiBold.ttf';
-import PoppinsBold from './assets/Poppins-Bold.ttf';
+// Brand master July 2026: DM Serif Display (display) + DM Sans (body)
+import DMSerifDisplayRegular from './assets/DMSerifDisplay-Regular.ttf';
+import DMSerifDisplayItalic from './assets/DMSerifDisplay-Italic.ttf';
+import DMSansRegular from './assets/DMSans-Regular.ttf';
+import DMSansMedium from './assets/DMSans-Medium.ttf';
+import DMSansBold from './assets/DMSans-Bold.ttf';
 
 export const ASSETS = {
   teacher: { href: teacher, w: 1080, h: 2022 },
@@ -22,11 +23,11 @@ export const ASSETS = {
   iconColor,
   iconWhite,
   fonts: [
-    { family: 'Kalam', weight: 700, src: KalamBold },
-    { family: 'Kalam', weight: 400, src: KalamRegular },
-    { family: 'Poppins', weight: 400, src: PoppinsRegular },
-    { family: 'Poppins', weight: 600, src: PoppinsSemiBold },
-    { family: 'Poppins', weight: 700, src: PoppinsBold },
+    { family: 'DM Serif Display', weight: 400, style: 'normal',  src: DMSerifDisplayRegular },
+    { family: 'DM Serif Display', weight: 400, style: 'italic',  src: DMSerifDisplayItalic },
+    { family: 'DM Sans',          weight: 400, style: 'normal',  src: DMSansRegular },
+    { family: 'DM Sans',          weight: 500, style: 'normal',  src: DMSansMedium },
+    { family: 'DM Sans',          weight: 700, style: 'normal',  src: DMSansBold },
   ],
 };
 
@@ -36,7 +37,7 @@ export function injectFontFaces(): void {
   const style = document.createElement('style');
   style.id = 'tgs-fonts';
   style.textContent = ASSETS.fonts
-    .map((f) => `@font-face{font-family:'${f.family}';font-weight:${f.weight};font-style:normal;src:url(${f.src}) format('truetype');}`)
+    .map((f) => `@font-face{font-family:'${f.family}';font-weight:${f.weight};font-style:${f.style};src:url(${f.src}) format('truetype');}`)
     .join('\n');
   document.head.appendChild(style);
 }

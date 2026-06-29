@@ -13,7 +13,7 @@ export function buildFileName(label: string, format: ExportFormat): string {
 
 /**
  * Capture the TRUE-SIZE Stage node at 1080x1350 and trigger a download.
- * Waits for web fonts to settle first (Kalam/Poppins) to avoid fallback-font captures.
+ * Waits for web fonts to settle first (DM Serif Display/DM Sans) to avoid fallback-font captures.
  */
 export async function exportPost(
   stageEl: HTMLElement,

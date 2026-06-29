@@ -51,10 +51,10 @@ export const layout1: LayoutModule = {
     const bodySize = Math.round(doc.bodySize * ts.body);
     const zone = getZone('L1', preset.id);
     const maxW = preset.orientation === 'landscape' ? zone.content.w - 60 : MAX_W;
-    const headlineLines = wrap(doc.headline, `700 ${headlineSize}px Kalam`, maxW);
-    const bodyLines = wrap(doc.body, `400 ${bodySize}px Poppins`, maxW);
+    const headlineLines = wrap(doc.headline, `400 ${headlineSize}px DM Serif Display`, maxW);
+    const bodyLines = wrap(doc.body, `400 ${bodySize}px DM Sans`, maxW);
     // include letter-spacing (0.5px between glyphs) so the pill width is exact
-    const pillTextWidth = measure(doc.hashtag, '600 20px Poppins') + 0.5 * Math.max(0, doc.hashtag.length - 1);
+    const pillTextWidth = measure(doc.hashtag, '700 20px DM Sans') + 0.5 * Math.max(0, doc.hashtag.length - 1);
     const ph = doc.photo;
     // per-preset focal point falls back to the photo's own focal, then the layout default
     const fp = doc.photoFocalPoints?.[preset.id];

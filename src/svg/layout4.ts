@@ -93,7 +93,7 @@ export function buildLayout4Svg(p: Layout4Params): string {
   const headTspans = p.headlineLines.map((line) => {
     const baseline = cursor + p.headlineSize * 0.82;
     cursor += headLineH;
-    return `<text x="${r2(TEXT_X)}" y="${r2(baseline)}" font-family="Kalam" font-weight="700" font-size="${p.headlineSize}" fill="${c.headline}">${esc(line)}</text>`;
+    return `<text x="${r2(TEXT_X)}" y="${r2(baseline)}" font-family="DM Serif Display" font-weight="400" font-size="${p.headlineSize}" fill="${c.headline}">${esc(line)}</text>`;
   }).join('\n  ');
 
   const bodyTop = HEAD_TOP_BASE * SY + headlineDY + p.headlineLines.length * headLineH + BODY_GAP_BASE * SY + bodyDY;
@@ -101,7 +101,7 @@ export function buildLayout4Svg(p: Layout4Params): string {
   const bodyTspans = p.bodyLines.map((line) => {
     const baseline = bcur + p.bodySize * 0.82;
     bcur += bodyLineH;
-    return `<text x="${r2(TEXT_X)}" y="${r2(baseline)}" font-family="Poppins" font-weight="400" font-size="${p.bodySize}" fill="${c.body}">${esc(line)}</text>`;
+    return `<text x="${r2(TEXT_X)}" y="${r2(baseline)}" font-family="DM Sans" font-weight="400" font-size="${p.bodySize}" fill="${c.body}">${esc(line)}</text>`;
   }).join('\n  ');
 
   // ── Hashtag pill — BOTTOM-LEFT by design ──────────────────────────────────
@@ -115,7 +115,7 @@ export function buildLayout4Svg(p: Layout4Params): string {
   const { x: pillX, y: pillY } = pillAnchor(p.preset, side, pillW, pillH);
   const pill =
     `<rect x="${pillX}" y="${pillY}" width="${pillW}" height="${pillH}" rx="${pillH / 2}" fill="${c.pillBg}"/>` +
-    `\n  <text x="${r2(pillX + pillW / 2)}" y="${r2(pillY + 29 * ES)}" text-anchor="middle" font-family="Poppins" font-weight="600" font-size="${r2(pillFont)}" letter-spacing="${r2(0.5 * ES)}" fill="${c.pillText}">${esc(p.hashtag)}</text>`;
+    `\n  <text x="${r2(pillX + pillW / 2)}" y="${r2(pillY + 29 * ES)}" text-anchor="middle" font-family="DM Sans" font-weight="700" font-size="${r2(pillFont)}" letter-spacing="${r2(0.5 * ES)}" fill="${c.pillText}">${esc(p.hashtag)}</text>`;
 
   // ── Logo ───────────────────────────────────────────────────────────────────
   const lw = 250 * S; const lh = 62 * S; const lx = 78 * S; const ly = 46 * S;

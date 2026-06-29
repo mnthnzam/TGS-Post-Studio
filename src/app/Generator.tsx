@@ -24,7 +24,7 @@ const SEED: PostContent = {
 
 const field: React.CSSProperties = {
   width: '100%', padding: '7px 9px', background: '#23252f', border: '1px solid #383b47',
-  borderRadius: 6, color: '#e8e8ea', fontSize: 13, fontFamily: 'Poppins, sans-serif',
+  borderRadius: 6, color: '#e8e8ea', fontSize: 13, fontFamily: 'DM Sans, sans-serif',
 };
 const label: React.CSSProperties = {
   fontSize: 10, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#7a7e8c',
@@ -49,7 +49,7 @@ export default function Generator() {
   };
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: '#1a1c26', fontFamily: 'Poppins, sans-serif' }}>
+    <div style={{ display: 'flex', minHeight: '100vh', background: '#1a1c26', fontFamily: 'DM Sans, sans-serif' }}>
       {/* ── Controls ── */}
       <div style={{ width: 340, padding: 20, display: 'flex', flexDirection: 'column', gap: 14, borderRight: '1px solid #2a2d39', overflowY: 'auto' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>

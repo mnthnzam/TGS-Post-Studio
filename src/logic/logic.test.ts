@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { defaultLayout, preferredColorway, hashtagFor, BUCKETS } from './mappings';
-import { kalamWeight } from './weightRules';
+import { displayWeight } from './weightRules';
 import { isTypicallyBoosted, BOOST_CTA_LINE } from './postTypes';
 
 describe('bucket mappings (§11/§12)', () => {
@@ -21,11 +21,17 @@ describe('bucket mappings (§11/§12)', () => {
   });
 });
 
-describe('Kalam weight rules (§15.5)', () => {
-  it('testimonial → 400, statement → 700, 15+ words → 300', () => {
-    expect(kalamWeight({ kind: 'testimonial', words: 9 })).toBe(400);
-    expect(kalamWeight({ kind: 'statement', words: 6 })).toBe(700);
-    expect(kalamWeight({ kind: 'statement', words: 16 })).toBe(300);
+describe('Display weight rules (§15.5 — DM Serif Display)', () => {
+  // DM Serif Display is single-weight (400). Style switches to italic for
+  // testimonials, community posts, and long headlines (15+ words).
+  it('testimonial → italic (emphasis)', () => {
+    expect(displayWeight({ kind: 'testimonial', words: 9 })).toEqual({ fontWeight: 400, fontStyle: 'italic' });
+  });
+  it('statement (short) → normal', () => {
+    expect(displayWeight({ kind: 'statement', words: 6 })).toEqual({ fontWeight: 400, fontStyle: 'normal' });
+  });
+  it('15+ words → italic regardless of kind', () => {
+    expect(displayWeight({ kind: 'statement', words: 16 })).toEqual({ fontWeight: 400, fontStyle: 'italic' });
   });
 });
 

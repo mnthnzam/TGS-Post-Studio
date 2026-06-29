@@ -31,7 +31,7 @@ export const layout2: LayoutModule = {
       bodySize: 28,
       headlineDY: 0,
       bodyDY: 0,
-      hashtagSide: 'right',
+      hashtagSide: 'left',  // brand master July 2026: pill anchors bottom-left on all layouts
       photo: { src: ASSETS.lab.href, w: ASSETS.lab.w, h: ASSETS.lab.h, scale: 1, focalX: 0, focalY: 0 },
       preset: 'feed-portrait',
       photoFocalPoints: {},
@@ -48,9 +48,9 @@ export const layout2: LayoutModule = {
     const zone = getZone('L2', preset.id);
     const headMaxW = isLandscape ? zone.content.w - 60 : L2_HEAD_MAX_W;
     const bodyMaxW = isLandscape ? zone.content.w - 60 : L2_BODY_MAX_W;
-    const headlineLines = wrap(doc.headline, `700 ${headlineSize}px Kalam`, headMaxW);
-    const bodyLines = wrap(doc.body, `400 ${bodySize}px Poppins`, bodyMaxW);
-    const pillTextWidth = measure(doc.hashtag, '600 19px Poppins') + 0.5 * Math.max(0, doc.hashtag.length - 1);
+    const headlineLines = wrap(doc.headline, `400 ${headlineSize}px DM Serif Display`, headMaxW);
+    const bodyLines = wrap(doc.body, `400 ${bodySize}px DM Sans`, bodyMaxW);
+    const pillTextWidth = measure(doc.hashtag, '700 19px DM Sans') + 0.5 * Math.max(0, doc.hashtag.length - 1);
     const ph = doc.photo;
     const fp = doc.photoFocalPoints?.[preset.id];
     const focalX = fp?.focalX ?? ph?.focalX ?? 0;

@@ -10,7 +10,7 @@ export type Bucket =
   | 'Curiosity Lab'
   | 'Activities & Experiential'
   | 'Beyond the Chalkboard'
-  | '3Cs in Action'
+  | 'Four Cs in Action'
   | 'Values-Based'
   | 'Farm → Future'
   | 'Sports & Wellbeing'
@@ -34,7 +34,7 @@ export const BUCKET_RULES: Record<Bucket, BucketRule> = {
   'Curiosity Lab': { layout: 'L2', colorway: 'A', hashtag: '#TheCuriosityLab' },
   'Activities & Experiential': { layout: 'L2', colorway: 'B', hashtag: '#TheCuriosityLab' },
   'Beyond the Chalkboard': { layout: 'L2', colorway: 'C', hashtag: '#BeyondTheChalkboard' },
-  '3Cs in Action': { layout: 'L2', colorway: 'A', hashtag: '#TheCuriosityLab' },
+  'Four Cs in Action': { layout: 'L2', colorway: 'A', hashtag: '#TheCuriosityLab' },
   'Values-Based': { layout: 'L3', colorway: 'B', hashtag: '#RootedInValues' },
   'Farm → Future': { layout: 'L3', colorway: 'B', hashtag: '#FarmToFuture' },
   'Sports & Wellbeing': { layout: 'L3', colorway: 'C', hashtag: '#TatvaAthletes' },
